@@ -9,11 +9,11 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
-        <title>Hello, world!</title>
+        <title>BLOG</title>
     </head>
     <body>
     <div class="container">
-        <button type="button" class="btn btn-success mt-5">create new </button>
+        <a href="{{route('posts.create')}}" type="button" class="btn btn-success mt-5">create new </a>
         <table class="table mt-5">
             <thead>
             <tr>
@@ -27,14 +27,19 @@
             <tbody>
             @foreach($posts as $post)
                 <tr>
-                    <th scope="row">{{$post['id']}}</th>
-                    <td>{{$post['title']}}</td>
-                    <td>{{$post['posted_by']}}</td>
-                    <td>{{$post['created_at']}}</td>
+                    <th scope="row">{{$post->id}}</th>
+                    <td>{{$post->title}}</td>
+                    <td>{{$post->user ?$post->user->name : "user not found"}}</td>
+                    <td>{{$post->created_at->format('Y-m-d')}}</td>
                     <td>
-                        <a class="btn btn-info">view</a>
-                        <a class="btn btn-primary">edit</a>
-                        <a class="btn btn-danger">delete</a>
+                        <a href="{{route('posts.show',$post->id)}}" class="btn btn-info">view</a>
+                        <a href="{{route('posts.edit',$post->id)}}" class="btn btn-primary">edit</a>
+                        <form style="display:inline;" method="POST" action="{{route('posts.destroy',$post->id)}}">
+                            @csrf
+                            @method('DELETE')
+
+                            <button class="btn btn-danger" type="submit">delete</button>
+                        </form>
                     </td>
                 </tr>
             @endforeach
